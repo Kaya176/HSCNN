@@ -16,7 +16,11 @@ for sent in sentences:
 model = FastText(corpus,vector_size=100, workers=4, sg=1,window = 3)
 model.train(corpus,total_examples=len(corpus),epochs= 10)
 
-model.save("test.model")
+model.save("tmc2007_fasttext") #binary file
+
+#get info
+print("Embeding size : ",100)
+#print("vocab size : ",len(model.vocab))
 
 #test
 print(model.wv.most_similar("airpor",topn=5))

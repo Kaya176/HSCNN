@@ -2,6 +2,7 @@
 conver arff file to csv(or txt)
 '''
 import pandas as pd
+
 def arff_to_csv(file_name):
 
     Class_idx = [str(idx) for idx in range(49060,49082)] #class01 ~ class 22
@@ -49,5 +50,8 @@ def arff_to_csv(file_name):
     return pd.DataFrame({"Text" : text,"Label" : labels})
 
 if __name__ == "__main__":
-    result = arff_to_csv("tmc2007-train.arff")
-    result.to_csv("result.csv",index = False)
+    train = arff_to_csv("tmc2007-train.arff")
+    test = arff_to_csv("tmc2007-test.arff")
+
+    train.to_csv("tmc2007-train.csv",index = False)
+    test.to_csv("tmc2007-test.csv",index = False)
