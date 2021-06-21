@@ -27,7 +27,7 @@ def arff_to_csv(file_name):
                 for l in line:
                     element = attr[l.split()[0]]
                     if l.split()[0] in Class_idx:
-                        label.append(element)
+                        label.append(element[-2:])
                     elif element in ["_","__","___"] and Onece:
                         converted = []
                         Onece = False
