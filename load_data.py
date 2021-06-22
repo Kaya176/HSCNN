@@ -10,6 +10,7 @@ fine-tuned model은 저장을 vec 파일로 한 뒤, torchtext에서 불러와�
 나중에 알아보도록 하고, 우선 pre-train된 파일을 이용하여 진행하는것으로 하고,
 밤에 다른 방법을 이용하여 fine-tuned된 파일을 torchtext에서 사용하는 방법을 이용해보자.
 '''
+from pandas.core.arrays import string_
 from torch._C import device
 from torch.nn.functional import embedding
 from torch.nn.modules.container import Sequential
@@ -32,18 +33,21 @@ def load_data():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     TEXT = data.Field(fix_length = 500)
-    LABEL = data.Field(sequential =False,is_target = True, use_vocab = False,dtype = torch.float64)
-    #ONEHOT = data.Field(Sequential = False, is_target = True, use_vocab = False, dtype = torch.float64)
+    #LABEL = data.Field(sequential =False,is_target = True, use_vocab = False,dtype = torch.StringType)
+    ONEHOT = data.Field(sequential = False, is_target = True, use_vocab = False, dtype = torch.float64, preprocessing=make_onehot)
 
-    field = {'text': ('text', TEXT),'label': ('label', LABEL)}
-    field1 = [('text',TEXT),("label",LABEL)]
+    field = {'text': ('text', TEXT),'onehot':("onehot",ONEHOT)}
+    #field1 = [('text',TEXT),("label",LABEL),("onehot",ONEHOT)]
     train_pairs,test_pairs = data.TabularDataset.splits(
         path = '.',
         train='tmc2007-train.csv', test = 'tmc2007-test.csv',
         format='csv',
-        fields=field1,
-        skip_header = True
+        fields=field,
+        skip_header = False
     )
+    '''
+    field의 데이터를 직접 바꿔주는 부분인데, 그냥 csv파일에 col 추가해서
+    preprocess추가해서 해결함. -> 이게 더 간단한듯.
     for i in range(len(train_pairs)):
         idx = vars(train_pairs[i])['label']
         idx = make_onehot(idx)
@@ -53,7 +57,7 @@ def load_data():
         idx = vars(test_pairs[i])['label']
         idx = make_onehot(idx)
         vars(test_pairs[i])['label'] = idx
-
+        '''
     #Embedding vectors - Pretrained
     vector = torchtext.vocab.Vectors(name = 'wiki.en.vec')
 
@@ -68,7 +72,7 @@ def load_data():
     train_pair_batch = data.BucketIterator(
         dataset = train_pairs,
         sort = False,
-        batch_size= 5,
+        batch_size= 20,
         repeat = False,
         shuffle= True,
         device = device
@@ -77,7 +81,7 @@ def load_data():
     test_pair_batch = data.BucketIterator(
         dataset = test_pairs,
         sort = False,
-        batch_size= 5,
+        batch_size= 20,
         repeat = False,
         shuffle= True,
         device = device

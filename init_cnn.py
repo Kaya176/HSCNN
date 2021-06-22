@@ -67,7 +67,7 @@ class CNN_network(nn.Module):
         cnn_out = self.label(x)
 
         #q_w = self.linear_onehot(label_onehot)
-        #q_w = self.relu(q_w/math.sqrt(self.d))
+        #q_w = self.relu(q_w/math.sqrt(self.d)) 
 
         return x,cnn_out
 
@@ -97,12 +97,12 @@ def train(train_data,model):
     model.train() #train mode
     train_loss = 0
     count = 0 
-    epochs = 100
+    epochs = 30
     for epoch in range(epochs):
         
         for batch_idx,batch in enumerate(train_data):
             text = batch.text
-            label = batch.label
+            label = batch.onehot
             #label = label.unsqueeze(1)
             #label = label.clone().detach().requires_grad_(True)
 
@@ -119,9 +119,12 @@ def train(train_data,model):
         print(f"Epoch : {epoch} \t Train  Loss : {train_loss/count : .3f}")
 
 train(train_data,model)
+'''
 #save model
+#100epoch 으로 학습을 진행하고, CNN-checkpoint.pt로 저장함. 
 state = {
     "state_dict" : model.state_dict(),
     'optimizer' : optimizer.state_dict()
 }
 torch.save(state,"CNN-checkpoint.pt")
+'''

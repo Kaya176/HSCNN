@@ -64,6 +64,7 @@ class HSCNN(nn.Module):
     def forward_sia(self, input1, input2, onehot1, onehot2, state1):
 
         if state1 == 'train':
+            #수정해야할 부분1 : sigmoid의 위치?
             x1, q_w1, cnn_out1 = self.forward_one(input1, onehot1)
             out1 = self.sig(x1)
             x2, q_w2, cnn_out2 = self.forward_one(input2, onehot2)
