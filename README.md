@@ -12,6 +12,11 @@
 ### How to Use?
 (완성된 후 작성 예정)
 
+### Change
+(기존 모델과 달라진 부분 작성)
+
+### Description
+
 ### Citation & Copyright  
 ```
 [1] @inproceedings{HSCNN,
